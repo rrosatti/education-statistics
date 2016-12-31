@@ -10,12 +10,9 @@ def get_dataset():
 	# this will select only the params: 'Country Name', 'Country Code', 'Inidicator Name', 'Indicator Code' 
 	# and the years from 1977 to 2016
 	df = df.iloc[:,:44]
+	df.drop('Indicator Code', 1, inplace=True)
 	save_pickle(df, 'selected_data.pickle')
 	return df
-
-def get_indicators():
-	df = pd.read_csv(data_path+'indicators_raw.txt', sep='\t')
-	print(df)
 
 def save_pickle(data, filename):
 	with open(data_path+filename, 'wb') as f:
