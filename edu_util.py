@@ -8,8 +8,8 @@ data_path = 'C:/Users/rodri/OneDrive/Documentos/python/data/education-statistics
 def get_dataset():
 	df = pd.read_csv(data_path+'data.csv')
 	# this will select only the params: 'Country Name', 'Country Code', 'Inidicator Name', 'Indicator Code' 
-	# and the years from 1977 to 2016
-	df = df.iloc[:,:44]
+	# and the years from 1977 to 2015
+	df = df.iloc[:,:43]
 	df.drop('Indicator Code', 1, inplace=True)
 	save_pickle(df, 'selected_data.pickle')
 	return df
