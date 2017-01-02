@@ -45,7 +45,7 @@ def get_enrolment_indicators():
 	all_ind = get_selected_indicators()
 	enrol_ind = []
 	for ind in all_ind:
-		if ('enrolment' in ind):
+		if ('Percentage of enrolment' in ind):
 			enrol_ind.append(ind)
 	#print(enrol_ind)
 	return enrol_ind
@@ -66,7 +66,8 @@ def get_expenditure_indicators():
 		if ('Expenditure' in ind):
 			expend_ind.append(ind)
 	#print(expend_ind)
-	return expend_ind
+	# the two first indicators are equal, so there's no need to return both
+	return expend_ind[1:]
 
 def get_percentage_graduates_indicators():
 	all_ind = get_selected_indicators()
@@ -84,7 +85,8 @@ def get_student_population_indicators():
 		if ('Population' in ind):
 			student_pop_ind.append(ind)
 	#print(student_pop_ind)
-	return student_pop_ind
+	# the first indicator won't be used
+	return student_pop_ind[1:]
 
 # op = {f: female, m: male, b: both}
 def literacy_analysis(df, plot=False, op='b'):
@@ -116,7 +118,45 @@ def school_life_expectancy_analysis(df, plot=False, op='b'):
 	if plot:
 		eplot.plot_school_life_expectancy_analysis(df2, ops.get(op).lstrip())
 	return df2
-	
+
+# op = {f: female, m: male, b: both}
+def enrolment_analysis(df, plot=False):
+	indicators = get_enrolment_indicators()
+	df2 = df[ df['Indicator Name'].isin(indicators) ]
+	df2 = df2.groupby('Indicator Name').agg(['mean'])
+	df2.columns = list(range(1977,2016))
+	if plot:
+		eplot.plot_enrolment_analysis(df2)
+	return df2
+
+def expenditure_analysis(df, plot=True):
+	indicators = get_expenditure_indicators()
+	# The data starts on 1998, so I'm filtering this range of time
+	cols = ['Indicator Name'] +  [str(i) for i in range(1998, 2016)]
+	df2 = df[cols]
+	df2 = df2[ df2['Indicator Name'].isin(indicators)]
+	df2 = df2.groupby('Indicator Name').agg(['mean'])
+	df2.columns = list(range(1998,2016))
+	if plot:
+		eplot.plot_expenditure_analysis(df2)
+	return df2
+
+# op = {f: female, m: male, t: total}
+def student_population_analysis(df, plot=False, op='t'):
+	ops = {'f': 'female', 'm': ' male', 't': 'total'}
+	indicators = get_student_population_indicators()
+	indOp = []
+	for i in indicators:
+		if (ops.get(op) in i):
+			indOp.append(i)
+	df2 = df[ df['Indicator Name'].isin(indOp) ]
+	df2 = df2.groupby('Indicator Name').agg(['mean'])
+	df2.columns = list(range(1977,2016))
+	if plot:
+		eplot.plot_student_population_analysis(df2, ops.get(op).lstrip())
+	return df2
+
+
 
 if eutil.file_exists(filename):
 	df = eutil.get_pickle(filename)
@@ -134,6 +174,10 @@ df = apply_selected_indicators(df)
 
 # analysing and ploting
 #literacy_analysis(df, True, 'b')
-school_life_expectancy_analysis(df, True, 'b')
+#school_life_expectancy_analysis(df, True, 'b')
+#enrolment_analysis(df, True)
+#expenditure_analysis(df, True)
+student_population_analysis(df, True, 't')
+
 
 

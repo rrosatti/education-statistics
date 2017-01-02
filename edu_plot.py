@@ -22,7 +22,8 @@ def plot_literacy_analysis(df, op):
 	ax1.plot(x, y2, label='Elderly', color='darkred')
 	ax1.plot(x, y3, label='Youth', color='darkcyan')
 
-	ax1.set_xticklabels(x, rotation=45)
+	ax1.set_xticks(x)
+	ax1.set_xticklabels(x, rotation=50)
 
 	plt.xlabel('Years')
 	plt.ylabel('Literay Rate Percentage')
@@ -52,7 +53,8 @@ def plot_school_life_expectancy_analysis(df, op):
 	for i, y in enumerate(ys):
 		ax1.plot(x, y, label=ylabels[i], color=np.random.rand(3,1))
 
-	ax1.set_xticklabels(x, rotation=45)
+	ax1.set_xticks(x)
+	ax1.set_xticklabels(x, rotation=50)
 
 	fontP = FontProperties()
 	fontP.set_size('small')
@@ -61,4 +63,82 @@ def plot_school_life_expectancy_analysis(df, op):
 	plt.ylabel('School Life Expectancy (Years)')
 	plt.title('School Life Expectancy ({})'.format(op), fontsize=15)
 	plt.legend(loc=0, prop=fontP)
+	plt.subplots_adjust(bottom=0.15)
 	plt.show()
+
+def plot_enrolment_analysis(df):
+	print(df)
+	fig = plt.figure()
+	ax1 = plt.subplot2grid((1,1), (0,0))
+
+	x = list(df.columns)
+	ys = [np.array(df.iloc[i]) for i in range(0, 8)]
+	ylabels = ['Early childhood', 'Lower secondary', 'Post-secondary non-tertiary', 'Pre-primary', 'Primary',
+				'Secondary', 'Tertiary', 'Upper Secondary']
+
+	for i, y in enumerate(ys):
+		ax1.plot(x, y, label=ylabels[i], color=np.random.rand(3,1))
+
+	ax1.set_xticks(x)
+	ax1.set_xticklabels(x, rotation=50)
+
+	plt.xlabel('Years')
+	plt.ylabel('Enrolment (%)')
+	plt.title('Percentage of enrolment')
+	plt.legend(loc=0)
+	plt.subplots_adjust(bottom=0.15)
+	plt.show()
+
+def plot_expenditure_analysis(df):
+	print(df)
+	fig = plt.figure()
+	ax1 = plt.subplot2grid((1,1), (0,0))
+
+	x = list(df.columns)
+	ys = [np.array(df.iloc[i]) for i in range(0,9)]
+	ylabels = ['Expenditure on education as (%) of total government expenditure on education', 'Early childhood', 'Lower secondary', 
+				'Post-Secondary non-tertiary', 'Pre-primary', 'Primary',
+				'Secondary', 'Tertiary', 'Upper secondary']
+
+	for i, y in enumerate(ys):
+		ax1.plot(x, ys[i], label=ylabels[i], color=np.random.rand(3,1))
+
+	ax1.set_xticks(x)
+	ax1.set_xticklabels(x, rotation=50)
+
+	fontP = FontProperties()
+	fontP.set_size('small')
+
+	plt.xlabel('Years')
+	plt.ylabel('Expenditure (%)')
+	plt.title('Expenditure on education as percentage of governement expenditure on education (%)', fontsize=14)
+	plt.legend(loc=9, prop=fontP, bbox_to_anchor=(0.5, -0.2))
+	plt.subplots_adjust(bottom=0.35)
+	plt.show()
+
+def plot_student_population_analysis(df, op):
+	print(df)
+	fig = plt.figure()
+	ax1 = plt.subplot2grid((1,1), (0,0))
+	plt.ticklabel_format(style='plain')
+
+	x = list(df.columns)
+	print(len(df))
+	ys = [np.array(df.iloc[i]) for i in range(0, len(df))]
+	ylabels = ['Ages 0-15', 'Ages 15-24']
+
+	for i, y in enumerate(ys):
+		ax1.plot(x, ys[i], label=ylabels[i], color=np.random.rand(3,1))
+
+	ax1.set_xticks(x)
+	ax1.set_xticklabels(x, rotation=50)
+
+	plt.xlabel('Years')
+	plt.ylabel('Student Population')
+	plt.title('Mean Student Population ({})'.format(op), fontsize=16)
+	plt.legend(loc=0)
+	#plt.ticklabel_format(style='plain')
+	plt.subplots_adjust(bottom=0.15, left=0.1)
+	plt.show()
+
+
