@@ -156,7 +156,36 @@ def student_population_analysis(df, plot=False, op='t'):
 		eplot.plot_student_population_analysis(df2, ops.get(op).lstrip())
 	return df2
 
+def student_population_analysis_all(df, plot=False):
+	indicators = get_student_population_indicators()
+	df2 = df[ df['Indicator Name'].isin(indicators) ]
+	df2 = df2.groupby('Indicator Name').agg(['mean'])
+	df2.columns = list(range(1977,2016))
+	if plot:
+		eplot.plot_student_population_analysis_all(df2)
+	return df2
 
+# op = {f: female, m: male, b: both sexes}
+def percentage_graduates_analysis(df, plot=False, op='b'):
+	ops = {'f': 'female', 'm': ' male', 'b': 'both sexes'}
+	indicators = get_percentage_graduates_indicators()
+	# The data starts on 1998, so I'm filtering this range of time
+	cols = ['Indicator Name'] + [str(i) for i in range(1998,2016)]
+	indOp = []
+	for i in indicators:
+		if (ops.get(op) in i):
+			indOp.append(i)
+	df2 = df[cols]
+	df2 = df2[ df2['Indicator Name'].isin(indOp) ]
+	df2 = df2.groupby('Indicator Name').agg(['mean'])
+	df2.columns = list(range(1998,2016))
+	if plot:
+		eplot.plot_percentage_graduates_analysis(df2, ops.get(op).lstrip())
+	return df2
+
+def select_country(df, country):
+	df2 = df[ df['Country Name'] == country ]
+	return df2
 
 if eutil.file_exists(filename):
 	df = eutil.get_pickle(filename)
@@ -164,6 +193,10 @@ else:
 	df = eutil.get_dataset()
 
 df = apply_selected_indicators(df)
+dfBrazil = select_country(df, 'Brazil')
+dfFinland = select_country(df, 'Finland')
+
+# Filtering indicators
 #get_literacy_indicators()
 #get_school_life_expectancy_indicators()
 #get_enrolment_indicators()
@@ -177,7 +210,22 @@ df = apply_selected_indicators(df)
 #school_life_expectancy_analysis(df, True, 'b')
 #enrolment_analysis(df, True)
 #expenditure_analysis(df, True)
-student_population_analysis(df, True, 't')
+#student_population_analysis(df, True, 'f')
+#student_population_analysis_all(df, True)
+#percentage_graduates_analysis(df, True, 'b')
 
+# Brazil 
+#school_life_expectancy_analysis(dfBrazil, True, 'b')
+#literacy_analysis(dfBrazil, True, 'b')
+#enrolment_analysis(dfBrazil, True)
+#student_population_analysis_all(dfBrazil, True)
+#percentage_graduates_analysis(dfBrazil, True, 'b')
 
+# Finland
+#school_life_expectancy_analysis(dfFinland, True, 'b')
+#literacy_analysis(dfFinland, True, 'b')
+#enrolment_analysis(dfFinland, True)
+#student_population_analysis_all(dfFinland, True)
+percentage_graduates_analysis(dfFinland, True, 'f')
+percentage_graduates_analysis(dfFinland, True, 'b')
 
